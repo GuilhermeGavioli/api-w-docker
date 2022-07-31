@@ -1,0 +1,42 @@
+version: "3.8"
+services:
+  db:
+    image: "mysql:5"
+    ports:
+      - 3307:3306
+    restart: always
+    volumes:
+      - ./mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=deploy
+      - MYSQL_USER=usuario
+      - MYSQL_PASSWORD=password
+    networks:
+      - mynet
+  node:
+    build: .
+
+    command: npm run start
+    
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/app
+      - /usr/src/app/node_modules
+    env_file:
+      - .env
+    networks:
+      - mynet
+    depends_on:
+      - db
+ 
+
+networks:
+  mynet:
+    driver: bridge
+
+
+
+ 
+
